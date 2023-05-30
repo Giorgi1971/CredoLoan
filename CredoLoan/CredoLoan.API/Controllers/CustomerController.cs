@@ -15,6 +15,13 @@ namespace CredoLoan.API.Controllers
             _authService = authService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetUsersAsync()
+        {
+            var Users = await _authService.GetUsersAsync();
+            return Ok(Users);
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequest request)
         {

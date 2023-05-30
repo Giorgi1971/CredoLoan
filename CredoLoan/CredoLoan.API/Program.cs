@@ -1,3 +1,5 @@
+﻿// პროექტი რომელსაც ვუყურებ Ext Js-ით. ნანას დავალება.
+
 using CredoLoan.API;
 using CredoLoan.Data;
 using CredoLoan.Repositories;
@@ -10,8 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<ICustomerRepository, CustomerRepository>();
 builder.Services.AddTransient<ILoanService, LoanService>();
+builder.Services.AddTransient<ILoanRepository, LoanRepository>();
 
 // Add services to the container.
+
+AuthConfigurator.Configure(builder);
 
 builder.Services.AddControllers();
 
@@ -20,7 +25,6 @@ builder.Services.AddDbContext<LoanDbContext>(options =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -52,7 +56,6 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-AuthConfigurator.Configure(builder);
 
 var app = builder.Build();
 
@@ -60,12 +63,21 @@ using var scope = app.Services.CreateScope();
 var dbContext = scope.ServiceProvider.GetService<LoanDbContext>();
 dbContext!.Database.EnsureCreated();
 
+app.UseCors(builder => builder.WithOrigins("*")
+.AllowAnyMethod()
+.AllowAnyHeader()
+);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

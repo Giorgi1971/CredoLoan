@@ -1,24 +1,26 @@
 ﻿namespace CredoLoan.Data.Entity
 {
-    public enum Currency
+    public class Currency
     {
-        GEL,
-        USD,
-        EUR
+        public int CurrencyId { get; set; }
+        public string? UnitName { get; set; }
     }
 
-    public enum LoanType
+    public class LoanType
     {
-        FAST,
-        AUTO,
-        INSTALLMENT
+        public int LoanTypeId { get; set; }
+        public string? Type { get; set; }
     }
 
-    public enum LoanStatus
+    public class LoanStatus
     {
-        Sended,
-        Processing,
-        Approved,
-        Rejected
+        public int LoanStatusId { get; set; }
+        public string? Status { get; set; }
+    }
+    public class LoanPeriod
+    {
+        public int LoanPeriodId { get; set; }
+        public string? Period { get; set; }
+        public int Month { get; set; }
     }
 }

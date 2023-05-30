@@ -4,12 +4,15 @@ using CredoLoan.Models.Requests;
 using CredoLoan.Models.Responses;
 using CredoLoan.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace CredoLoan.Services
 {
     public interface IAuthService
     {
+        
+        Task<List<CustomerEntity>> GetUsersAsync();
         Task<LoginResponse> LoginAsync(string email, string password);
         Task<UserRegistrationResponse> UserRegistrationAsync(UserRegistrationRequest request);
     }
@@ -30,6 +33,12 @@ namespace CredoLoan.Services
             _tokenGenerator = tokenGenerator;
             _userManager = userManager;
             _customerRepository = customerRepository;
+        }
+
+        public async Task<List<CustomerEntity>> GetUsersAsync()
+        {
+            var users = await _customerRepository.GetUsersAsync();
+            return users;
         }
 
         public async Task<LoginResponse> LoginAsync(string email, string password)
@@ -61,7 +70,7 @@ namespace CredoLoan.Services
                 LastName = request.LastName,
                 BirthDate = request.BirthDate,
                 Email = request.Email,
-                UserName = "Jonaida",
+                UserName = request.Email,
                 PersonalNumber = request.PersonalNumber
             };
             var resultCreateUser = await _userManager.CreateAsync(customer, request.Password);
